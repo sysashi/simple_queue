@@ -67,6 +67,9 @@ not support backpressure (it does in theory, and that is processes mailbox), so
 realistically one would implement an interface similar to [poolboy](https://github.com/devinus/poolboy),
 distributing load across multiple processes (queues)
 
+Since queue is gated behind a process which only processes synchronous calls,
+multiple consumers(processes) should not be a problem.
+
 ## Running
 
 There is a simple interface `SQ` to test program in the iex.
@@ -82,6 +85,8 @@ Available commands:
   * `iex> SQ.get() # => {message_id, message} | :empty`, 
   * `iex> SQ.ack(message_id) # => :ok | {:error, :not_found}`
   * `iex> SQ.reject(message_id) # => :ok | {:error, :not_found}`
+  * `iex> SQ.purge() # => resets queue of the process`
+  * `iex> SQ.purge(table: true) # => same as above plus purges database table`
 
 Messages that have not been acknowledged will persists across node and process restarts
 
