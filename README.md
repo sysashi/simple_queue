@@ -11,8 +11,9 @@ You can configure path for the mnesia database at `config/config.exs`, default
 path is `'.mnesia/#{Mix.env}/#{node()}'`
 
 There are two options how messages will be handled when you `ack` them:
-    1. `delete` - deletes message from the store
-    2. `mark` - marks messages with provided status
+
+  1. `delete` - deletes message from the store
+  2. `mark` - marks messages with provided status
 
 To configure this behaviour simply add
 
@@ -33,9 +34,9 @@ _Default store is **mnesia**_
 
 ## Building
 
-    1. Clone the project, `git clone $url`
-    2. Inside project's root run `mix do deps.get, compile`
-    3. Create mnesia database `mix amnesia.create -d SQ.Mnesia.Database --disk`
+  1. Clone the project, `git clone https://github.com/sysashi/simple_queue.git`
+  2. Inside project's root run `mix do deps.get, compile`
+  3. Create mnesia database `mix amnesia.create -d SQ.Mnesia.Database --disk`
        (otherwise messages will be stored in memory)
 
 ## Tests
@@ -77,10 +78,10 @@ iex> SQ.create! # creates a single named queue process
 ```
 Available commands: 
 
-    * `iex> SQ.add(message) # => :ok` 
-    * `iex> SQ.get() # => {message_id, message} | :empty`, 
-    * `iex> SQ.ack(message_id) # => :ok | {:error, :not_found}`
-    * `iex> SQ.reject(message_id) # => :ok | {:error, :not_found}`
+  * `iex> SQ.add(message) # => :ok` 
+  * `iex> SQ.get() # => {message_id, message} | :empty`, 
+  * `iex> SQ.ack(message_id) # => :ok | {:error, :not_found}`
+  * `iex> SQ.reject(message_id) # => :ok | {:error, :not_found}`
 
 Messages that have not been acknowledged will persists across node and process restarts
 
