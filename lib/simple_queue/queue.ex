@@ -4,7 +4,7 @@ defmodule SQ.Queue do
   alias SQ.{Store, Message}
 
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts)
+    GenServer.start_link(__MODULE__, :ok, opts)
   end
 
   def init(_opts) do
