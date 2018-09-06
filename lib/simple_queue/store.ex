@@ -7,7 +7,7 @@ defmodule SQ.Store do
 
   @callback get(id :: non_neg_integer) :: Message.t | {:error, :not_found}
 
-  @callback insert(message :: Message.t) :: :ok
+  @callback insert(message :: Message.t) :: Message.t
 
   @callback update(id :: non_neg_integer, updates :: keyword) :: Message.t | {:error, :not_found}
 
