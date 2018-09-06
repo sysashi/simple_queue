@@ -1,0 +1,5 @@
+%{
+  "amnesia": {:git, "https://github.com/meh/amnesia.git", "3dc0cdcbf8af263d1d784758037ce50291fccc37", [branch: "master"]},
+  "exquisite": {:git, "https://github.com/meh/exquisite.git", "ff8446c9aab2dfcfcc1796849575fe86c708b6ba", [branch: "master"]},
+  "memento": {:hex, :memento, "0.1.0", "14d540ee45325ab743baa4e190b0e33168dbd4f16df93d8499d320809ca85c67", [:mix], [], "hexpm"},
+}
