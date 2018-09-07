@@ -2,7 +2,7 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :mnesia, dir: '.mnesia/#{Mix.env}/#{node()}'
+config :mnesia, dir: '.mnesia/#{Mix.env()}/#{node()}'
 
 config :simple_queue, :queue,
   mark_completed: true,

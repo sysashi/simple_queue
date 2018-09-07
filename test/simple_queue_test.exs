@@ -8,9 +8,9 @@ defmodule SQ.QueueTest do
   setup do
     create_store!()
 
-    on_exit fn -> 
+    on_exit(fn ->
       destroy_store()
-    end
+    end)
   end
 
   setup do
@@ -18,9 +18,9 @@ defmodule SQ.QueueTest do
   end
 
   test "add messages to the queue", c do
-    Enum.each(c.values, &(Queue.add(c.queue, &1)))
+    Enum.each(c.values, &Queue.add(c.queue, &1))
 
-    Enum.each(c.values, fn val -> 
+    Enum.each(c.values, fn val ->
       assert {_, ^val} = Queue.get(c.queue)
     end)
 
@@ -28,9 +28,9 @@ defmodule SQ.QueueTest do
   end
 
   test "make sure messages persist across process restart", c do
-    Enum.each(c.values, &(Queue.add(c.queue, &1)))
+    Enum.each(c.values, &Queue.add(c.queue, &1))
 
-    Enum.each(c.values, fn val -> 
+    Enum.each(c.values, fn val ->
       assert {_, ^val} = Queue.get(c.queue)
     end)
 
@@ -40,7 +40,7 @@ defmodule SQ.QueueTest do
 
     queue = start_supervised!(Queue)
 
-    Enum.each(c.values, fn val -> 
+    Enum.each(c.values, fn val ->
       assert {_, ^val} = Queue.get(queue)
     end)
   end

@@ -12,7 +12,7 @@ defmodule SQ.Queue do
   end
 
   ## API
-   
+
   @type queue :: pid | atom
 
   @typep id :: non_neg_integer
@@ -23,7 +23,7 @@ defmodule SQ.Queue do
   def add(queue, message) do
     GenServer.call(queue, {:add, message})
   end
-  
+
   @spec get(queue) :: message | :empty
   def get(queue) do
     GenServer.call(queue, :get)
@@ -59,6 +59,7 @@ defmodule SQ.Queue do
     case dequeue(queue) do
       {%Message{id: id, message: message}, queue} ->
         {:reply, {id, message}, queue}
+
       {:empty, queue} ->
         {:reply, :empty, queue}
     end
@@ -72,6 +73,7 @@ defmodule SQ.Queue do
     case handle_reject(id, queue, queue_config()) do
       {%Message{}, queue} ->
         {:reply, :ok, queue}
+
       {error, queue} ->
         {:reply, error, queue}
     end
@@ -93,6 +95,7 @@ defmodule SQ.Queue do
     case :queue.out(queue) do
       {{:value, message}, queue} ->
         {message, queue}
+
       {:empty, queue} ->
         {:empty, queue}
     end
@@ -105,6 +108,7 @@ defmodule SQ.Queue do
     else
       :delete ->
         Store.delete(message_id, opts)
+
       error ->
         error
     end
@@ -114,13 +118,19 @@ defmodule SQ.Queue do
     case Store.mark_as_last(message_id, opts) do
       %SQ.Message{} = message ->
         {message, enqueue(queue, message)}
+
       error ->
         {error, queue}
     end
   end
 
-  defp action(opts), do: if opts[:mark_completed], 
-    do: {:mark, Keyword.get(opts, :mark_with, :completed)}, else: :delete
+  defp action(opts) do
+    if opts[:mark_completed] do
+      {:mark, Keyword.get(opts, :mark_with, :completed)}
+    else
+      :delete
+    end
+  end
 
   defp queue_config(), do: Application.get_env(:simple_queue, :queue, [])
 end

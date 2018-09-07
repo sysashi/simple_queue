@@ -4,9 +4,9 @@ defmodule SQ.StoreTest do
   setup do
     create_store!()
 
-    on_exit fn -> 
+    on_exit(fn ->
       destroy_store()
-    end
+    end)
   end
 
   test "insert message" do
@@ -14,7 +14,7 @@ defmodule SQ.StoreTest do
 
     Enum.each(messages, &Store.insert/1)
 
-    assert Enum.map(Store.all(), &(&1.message)) == Enum.map(messages, &(&1.message))
+    assert Enum.map(Store.all(), & &1.message) == Enum.map(messages, & &1.message)
 
     # all messages have 'queued' status when inserted and retrieved in desc order
     assert Store.all() == Enum.reverse(Store.queued())
@@ -37,11 +37,11 @@ defmodule SQ.StoreTest do
 
     assert Store.get(message.id) == message
 
-    assert %Message{} = updated_message = Store.update(message.id, [message: "updated"])
+    assert %Message{} = updated_message = Store.update(message.id, message: "updated")
 
     assert updated_message.id == message.id && updated_message.message == "updated"
 
-    assert {:error, :not_found} = Store.update(100, [status: :foo]) 
+    assert {:error, :not_found} = Store.update(100, status: :foo)
   end
 
   test "mark message as last" do

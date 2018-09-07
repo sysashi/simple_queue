@@ -6,8 +6,8 @@ defmodule SQ.DataCase do
       import SQ.DataCase
 
       alias SQ.{
-        Store, 
-        Queue, 
+        Store,
+        Queue,
         Message,
         Mnesia.Database
       }
@@ -18,11 +18,11 @@ defmodule SQ.DataCase do
     Amnesia.Schema.create()
     Amnesia.start()
 
-    on_exit fn -> 
-      Amnesia.stop
-      Amnesia.Schema.destroy
+    on_exit(fn ->
+      Amnesia.stop()
+      Amnesia.Schema.destroy()
       :ok
-    end
+    end)
 
     :ok
   end
@@ -32,6 +32,6 @@ defmodule SQ.DataCase do
   end
 
   def destroy_store() do
-    SQ.Mnesia.Database.destroy
+    SQ.Mnesia.Database.destroy()
   end
 end

@@ -7,34 +7,33 @@ defmodule SQ.Mnesia do
     deftable Message, [{:id, autoincrement}, :message, :status],
       type: :ordered_set,
       index: [:status] do
-
-        def read_for_update(id) when is_integer(id) do
-          Message.read(id, :write)
-        end
-
-        def insert(%Message{} = message) do
-          Message.write(message)
-        end
+      def read_for_update(id) when is_integer(id) do
+        Message.read(id, :write)
       end
+
+      def insert(%Message{} = message) do
+        Message.write(message)
+      end
+    end
   end
 
   @impl true
   def all() do
-    Amnesia.transaction!(fn -> Database.Message.match([]) end) 
+    Amnesia.transaction!(fn -> Database.Message.match([]) end)
     |> coerce()
     |> Enum.map(&convert/1)
   end
 
   @impl true
   def queued() do
-    Amnesia.transaction!(fn -> Database.Message.match(status: :queued) end) 
+    Amnesia.transaction!(fn -> Database.Message.match(status: :queued) end)
     |> coerce()
     |> Enum.map(&convert/1)
   end
 
   @impl true
   def get(id) do
-    Amnesia.transaction!(fn -> 
+    Amnesia.transaction!(fn ->
       case Database.Message.read(id) |> wrap_result() do
         {:ok, message} -> convert(message)
         error -> error
@@ -44,9 +43,9 @@ defmodule SQ.Mnesia do
 
   @impl true
   def insert(%SQ.Message{} = message) do
-    Amnesia.transaction!(fn -> 
-      message 
-      |> convert() 
+    Amnesia.transaction!(fn ->
+      message
+      |> convert()
       |> Database.Message.insert()
       |> convert()
     end)
@@ -54,13 +53,14 @@ defmodule SQ.Mnesia do
 
   @impl true
   def update(id, updates) when is_integer(id) and is_list(updates) do
-    Amnesia.transaction!(fn -> 
+    Amnesia.transaction!(fn ->
       case id |> Database.Message.read_for_update() |> wrap_result() do
         {:ok, message} ->
           message
           |> struct(updates)
           |> Database.Message.insert()
           |> convert()
+
         error ->
           error
       end
@@ -69,16 +69,17 @@ defmodule SQ.Mnesia do
 
   @impl true
   def delete(%SQ.Message{} = message) do
-    Amnesia.transaction!(fn -> 
+    Amnesia.transaction!(fn ->
       message |> convert() |> Database.Message.delete()
     end)
   end
 
   def delete(id) when is_integer(id) and id > 0 do
-    Amnesia.transaction!(fn -> 
+    Amnesia.transaction!(fn ->
       case id |> Database.Message.read() |> wrap_result() do
-        {:ok, message} -> 
+        {:ok, message} ->
           Database.Message.delete(message)
+
         error ->
           error
       end
@@ -87,7 +88,7 @@ defmodule SQ.Mnesia do
 
   @impl true
   def mark_as_last(id) do
-    Amnesia.transaction!(fn -> 
+    Amnesia.transaction!(fn ->
       case id |> Database.Message.read() |> wrap_result() do
         {:ok, message} ->
           :ok = Database.Message.delete(message)
@@ -95,6 +96,7 @@ defmodule SQ.Mnesia do
           %{message | id: nil}
           |> Database.Message.insert()
           |> convert()
+
         error ->
           error
       end
@@ -124,8 +126,8 @@ defmodule SQ.Mnesia do
 
   defp coerce({Database.Message, id, message, status}) do
     %Database.Message{
-      id: id, 
-      message: message, 
+      id: id,
+      message: message,
       status: status
     }
   end

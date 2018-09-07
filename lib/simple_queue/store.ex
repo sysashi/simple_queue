@@ -1,19 +1,20 @@
 defmodule SQ.Store do
   alias SQ.Message
 
-  @callback all() :: [Message.t]
+  @callback all() :: [Message.t()]
 
-  @callback queued() :: [Message.t]
+  @callback queued() :: [Message.t()]
 
-  @callback get(id :: non_neg_integer) :: Message.t | {:error, :not_found}
+  @callback get(id :: non_neg_integer) :: Message.t() | {:error, :not_found}
 
-  @callback insert(message :: Message.t) :: Message.t
+  @callback insert(message :: Message.t()) :: Message.t()
 
-  @callback update(id :: non_neg_integer, updates :: keyword) :: Message.t | {:error, :not_found}
+  @callback update(id :: non_neg_integer, updates :: keyword) ::
+              Message.t() | {:error, :not_found}
 
-  @callback delete(message_or_id :: Message.t | non_neg_integer) :: :ok
+  @callback delete(message_or_id :: Message.t() | non_neg_integer) :: :ok
 
-  @callback mark_as_last(id :: non_neg_integer) :: Message.t | {:error, :not_found}
+  @callback mark_as_last(id :: non_neg_integer) :: Message.t() | {:error, :not_found}
 
   @callback purge() :: :ok
 
